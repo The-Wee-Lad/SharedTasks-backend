@@ -29,6 +29,12 @@ const userSchema = new Schema({
             }
         ]
     },
+    avatar: String,
+    coverImage: String,
+    isActive:{
+        type : Boolean,
+        default: false,
+    }
 },{timestamps: true});
 
 userSchema.methods.passwordCheck = async function(password){
