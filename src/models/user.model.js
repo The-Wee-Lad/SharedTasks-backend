@@ -29,6 +29,14 @@ const userSchema = new Schema({
             }
         ]
     },
+    archives: {
+        type: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "todos",
+            }
+        ]
+    },
     avatar: String,
     coverImage: String,
     isActive:{

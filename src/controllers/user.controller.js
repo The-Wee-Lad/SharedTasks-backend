@@ -200,7 +200,7 @@ const getAllTodoLists = asyncHandler( async (req, res) => {
                     {
                         $lookup:{
                             from: "todolists",
-                            localField:"todoLists",
+                            localField:"tasks",
                             foreignField:"_id",
                             as: "tasks",
                         }
@@ -217,6 +217,37 @@ const getAllTodoLists = asyncHandler( async (req, res) => {
     res.status(200).json(new ApiResponse(200,todos,"Sent all todoLists"));
 });
 
+const toggleArchive = asyncHandler( async (req, res) => {
+    
+    const {todoListId} = req.params;
+    if(!mongoose.isValidObjectId(todoListId)){
+        throw new ApiError(400,"Invalid Id");
+    }
+    const A = await User.findOneAndUpdate({
+        _id: req.user?._id,
+        todolists:todoListId,
+    },
+    {
+        $pull: {todolists:new mongoose.Types.ObjectId(todoListId)},
+        $push: {archives:new mongoose.Types.ObjectId(todoListId)}
+    }).select("-password -refreshToken");
+    const B = await User.findOneAndUpdate({
+        _id: req.user?._id,
+        archives:todoListId,
+    },
+    {
+        $pull: {archives:new mongoose.Types.ObjectId(todoListId)},
+        $push: {todolists:new mongoose.Types.ObjectId(todoListId)}
+    }).select("-password -refreshToken");
+
+    if(!A && !B){
+        throw new ApiError(400, "No Such Todolist Found");
+    }
+
+    res.status(200).json(new ApiResponse(200, A||B, "Successfull"));
+
+});
+
 export {
     refreshAccessToken,
     register,
@@ -228,4 +259,5 @@ export {
     updateEmail,
     getCurrentUser,
     getAllTodoLists,
+    toggleArchive,
 }
