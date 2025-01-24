@@ -34,4 +34,4 @@ const requestSchema = new Schema({
     }
 },{timestamps: true});
 
-export const request = model("requests", requestSchema);
+export const Request = model("requests", requestSchema);

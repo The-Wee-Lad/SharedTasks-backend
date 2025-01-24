@@ -3,6 +3,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { cookieOptions } from "../constant.js";
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { json } from 'express';
+import mongoose from 'mongoose';
 
 const refreshAccessToken = asyncHandler( async (req, res) => {
     const refreshToken = req.cookies.refreshToken || req.headers?.authorization?.replace('Bearer ','').trim();
@@ -175,6 +176,47 @@ const updateEmail = asyncHandler( async (req, res) => {
 //I thouht i should but it is not a social media thing
 //eh, may be avtar acts as secondary form of recognition for users 
 
+const getCurrentUser = asyncHandler( async(req, res) => {
+    res
+    .status(200)
+    .json(new ApiResponse(200, await User.findById(req.user?._id)
+    .select('-password -refreshToken'), "Current User Data Fetched"));
+});
+
+const getAllTodoLists = asyncHandler( async (req, res) => {
+    const todos = await User.aggregate([
+        {
+            $match:{
+                _id: new mongoose.Types.ObjectId(req.user?._id)
+            }
+        },
+        {
+            $lookup:{
+                from: "todolists",
+                localField:"todoLists",
+                foreignField:"_id",
+                as: "todoLists",
+                pipeline:[
+                    {
+                        $lookup:{
+                            from: "todolists",
+                            localField:"todoLists",
+                            foreignField:"_id",
+                            as: "tasks",
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $project:{
+                todolists : 1
+            }
+        }
+    ]);
+    res.status(200).json(new ApiResponse(200,todos,"Sent all todoLists"));
+});
+
 export {
     refreshAccessToken,
     register,
@@ -184,4 +226,6 @@ export {
     changePassword,
     forgotPassword,
     updateEmail,
+    getCurrentUser,
+    getAllTodoLists,
 }

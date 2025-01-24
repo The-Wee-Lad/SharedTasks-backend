@@ -31,6 +31,10 @@ const taskSchema = new Schema({
             ref:"users",
         }
     ],
+    createdBy : {
+        type: Schema.Types.ObjectId,
+        ref: "users"
+    }
 },{timestamps: true});
 
-export const task = model("tasks",taskSchema);
+export const Task = model("tasks",taskSchema);

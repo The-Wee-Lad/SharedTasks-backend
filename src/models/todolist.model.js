@@ -40,4 +40,4 @@ const todoListSchema = new Schema({
 },{timestamps: true});
 
 
-export const todoList = model("todolists",todoListSchema);
+export const TodoList = model("todolists",todoListSchema);
