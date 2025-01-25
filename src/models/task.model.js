@@ -14,7 +14,7 @@ const taskSchema = new Schema({
             in: Date
         },
         default: {
-            is: true,
+            is: false,
             in: null
         }
     },
@@ -25,6 +25,12 @@ const taskSchema = new Schema({
     whenDone: {
         type:Date,
     },
+    doneBy:[
+        {
+            type: Schema.Types.ObjectId,
+            ref:"users",
+        }
+    ],
     assignedTo: [
         {
             type: Schema.Types.ObjectId,

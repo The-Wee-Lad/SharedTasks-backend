@@ -2,7 +2,6 @@ import { User } from '../models/user.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { cookieOptions } from "../constant.js";
 import { ApiResponse } from '../utils/ApiResponse.js';
-import { json } from 'express';
 import mongoose from 'mongoose';
 
 const refreshAccessToken = asyncHandler( async (req, res) => {

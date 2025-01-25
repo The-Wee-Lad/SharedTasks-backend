@@ -32,7 +32,7 @@ const todoListSchema = new Schema({
     },
     sharedToWrite:[String],
     sharedToRead:[String],
-    SharedToPartialWrite:[String],
+    // SharedToPartialWrite:[String],
 },{timestamps: true});
 
 

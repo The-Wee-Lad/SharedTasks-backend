@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const revokeAutherisation = asyncHandler( async ( req, res) => {
-
+    
 });
 
 const addAutherisation = asyncHandler( async ( req, res) => {

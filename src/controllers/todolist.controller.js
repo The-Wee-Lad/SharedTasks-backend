@@ -5,13 +5,16 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createTodoList = asyncHandler( async (req, res) => {
-    const {title, description, isShared = false} = req.body;
+    const {title, description 
+        // isShared = false
+        } = req.body;
+
     if(!title){
         throw new ApiError(400,"Title is required");
     }
     
-    if(isShared === "true") isShared = true;
-    else isShared = false;
+    // if(isShared === "true") isShared = true;
+    // else isShared = false;
 
     const user = await User.findById(req.user?._id);
     
@@ -22,9 +25,8 @@ const createTodoList = asyncHandler( async (req, res) => {
         tasks: [],
         sharedToRead: [],
         sharedToWrite: [],
-        SharedToPartialWrite: [],
-        isArchived: false,
-        isShared: isShared
+        // SharedToPartialWrite: [],
+        // isShared: isShared
     });
 
     if(!newTodoList){
@@ -86,18 +88,19 @@ const deleteTodoList = asyncHandler( async (req, res) => {
         }
     }
 
-    for (const [index,elem] of toBeDeletedTodoList.SharedToPartialWrite.entries()){
-        if(elem === user?.username){
-            flag = 0;
-            toBeDeletedTodoList.splice(index,1);
-        }
-    }
+    // for (const [index,elem] of toBeDeletedTodoList.SharedToPartialWrite.entries()){
+    //     if(elem === user?.username){
+    //         flag = 0;
+    //         toBeDeletedTodoList.splice(index,1);
+    //     }
+    // }
 
     if(adminsGone){
         toBeDeletedTodoList.sharedToRead
         .push(...toBeDeletedTodoList.sharedToWrite,
-                ...toBeDeletedTodoList.SharedToPartialWrite);
-        toBeDeletedTodoList.SharedToPartialWrite=[],
+                // ...toBeDeletedTodoList.SharedToPartialWrite
+                );
+        // toBeDeletedTodoList.SharedToPartialWrite=[],
         toBeDeletedTodoList.sharedToWrite=[];
     }
 
@@ -105,10 +108,11 @@ const deleteTodoList = asyncHandler( async (req, res) => {
         throw new ApiError(400,"the TodoList doesn't exist for the current user");
     }
 
-    if(toBeDeletedTodoList.admins.length +
-        toBeDeletedTodoList.sharedToRead.length+
-        toBeDeletedTodoList.sharedToWrite.length+
-        toBeDeletedTodoList.SharedToPartialWrite){
+    if(toBeDeletedTodoList.admins.length
+        +toBeDeletedTodoList.sharedToRead.length
+        +toBeDeletedTodoList.sharedToWrite.length
+        //+toBeDeletedTodoList.SharedToPartialWrite
+    ){
         await TodoList.delete({_id : toBeDeletedTodoList._id});
     }else{
         await toBeDeletedTodoList.save()
@@ -142,6 +146,7 @@ const updateTodoList = asyncHandler( async (req, res) => {
     res.status(200).json(new ApiResponse(200, data, "Updated"));
 });
 
+//TODO:add proper aggregation pipeline here
 const getTodoListById =  asyncHandler( async (req, res) => {
     const {todoListId} = req.params;
     if(!mongoose.isValidObjectId(todoListId)){
