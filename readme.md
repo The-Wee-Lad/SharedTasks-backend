@@ -1,4 +1,6 @@
-# SharedTasks - rudimentary task managment backend
+# Sha
+
+## Still Under Development.
 
 ## Database Schema 
 
