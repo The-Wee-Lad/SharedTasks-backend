@@ -3,7 +3,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { cookieOptions } from "../constant.js";
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { ApiError } from '../utils/ApiError.js';
-import mongoose from 'mongoose';``
+import jwt, { decode } from 'jsonwebtoken';
 
 const generateTokens = async (userId) => {
     const user = await User.findById(userId);
@@ -33,13 +33,15 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
     }
     
     const user = await User.findById(decodedToken?._id);
+    // console.log(user);
     
     if((user?.refreshToken !== refreshToken && user)){
         throw new ApiError(401,"Unauthorised Access");
     }
 
-    const { newAccessToken, newRefreshToken }= await generateTokens(user._id);
-
+    const response =   (await generateTokens(user._id));
+    const { newAccessToken, newRefreshToken} = {newAccessToken: response.accessToken , newRefreshToken : response.refreshToken };
+    // console.log(newAccessToken, newRefreshToken);
     res
     .status(200)
     .cookie('accessToken',newAccessToken,cookieOptions)
@@ -113,8 +115,8 @@ const login = asyncHandler( async (req, res) => {
 
     res
     .status(200)
-    .cookie("accessToken", accessToken)
-    .cookie("refreshToken", refreshToken)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .json(new ApiResponse(200, data, "User logged in succesfully"));
 });
 
@@ -143,7 +145,9 @@ const updateFullname = asyncHandler( async (req, res) => {
     
     const {fullname} = req.body;
     
-    const user = await User.findById(req.User?._id).select("-password -refreshToken");
+    const user = await User.findById(req.user?._id).select("-password -refreshToken");
+    
+    // console.log(user);
     
     if(!fullname){
         throw new ApiError(400,"FUllnaem can't be empty");
@@ -179,7 +183,7 @@ const forgotPassword = asyncHandler( async (req, res) => {
 const updateEmail = asyncHandler( async (req, res) => {
 
     const {password, newEmail} = req.body;
-    const user = User.findById(req.user?._id);
+    const user = await User.findById(req.user?._id);
     if(!await user.passwordCheck(password)){
         throw new ApiError(401,"Wrong password");
     }
@@ -188,6 +192,9 @@ const updateEmail = asyncHandler( async (req, res) => {
         throw new ApiError(409, "Already In Use");
 
     //TODO: Setup a email sender for verification
+
+    res.status(200).json(new ApiResponse(200, {}, "Email Updated"));
+    console.log("Email Updated");
 
 });
 //Though there is a field for avatar and cover, I don't see any reason to include them

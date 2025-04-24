@@ -3,7 +3,6 @@ dotenv.config({
     path: "./.env",
     credentials : true,
 });
-console.log(process.env.MONGO_URI);
 
 import { connectDb } from "./db/index.js";
 import { app } from "./app.js"
