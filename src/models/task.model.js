@@ -8,38 +8,24 @@ const taskSchema = new Schema({
     description: {
         type: String,
     },
-    expiresIn: {
-        type:{
-            is: Boolean,
-            in: Date
-        },
-        default: {
-            is: false,
-            in: null
-        }
-    },
-    done:{
-        type: Boolean,
-        default: false,
-    },
-    whenDone: {
-        type:Date,
-    },
-    doneBy:[
-        {
-            type: Schema.Types.ObjectId,
-            ref:"users",
-        }
-    ],
-    assignedTo: [
-        {
-            type: Schema.Types.ObjectId,
-            ref:"users",
-        }
-    ],
-    createdBy : {
+    taskListId:{
         type: Schema.Types.ObjectId,
-        ref: "users"
+        ref: "tasklists",
+        required:true,
+    },
+    status:{
+        type: String,
+        enum: ["todo", "in-progress", "done"],
+        default: "todo",
+    },
+    priority:{
+        type: String,
+        enum: ["low", "medium", "high"],
+        default: "low",
+    },
+    dueDate:{
+        type: Date,
+        default: null,
     }
 },{timestamps: true});
 
