@@ -2,7 +2,21 @@ import { User } from '../models/user.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { cookieOptions } from "../constant.js";
 import { ApiResponse } from '../utils/ApiResponse.js';
-import mongoose from 'mongoose';
+import { ApiError } from '../utils/ApiError.js';
+import mongoose from 'mongoose';``
+
+const generateTokens = async (userId) => {
+    const user = await User.findById(userId);
+    if(!user){
+        throw new ApiError(404,"User Not Found [GENERATION OF TOKENS FAILED");
+    }
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+    user.refreshToken = refreshToken;
+    await user.save();
+    return {accessToken, refreshToken};
+}
+
 
 const refreshAccessToken = asyncHandler( async (req, res) => {
     const refreshToken = req.cookies.refreshToken || req.headers?.authorization?.replace('Bearer ','').trim();
@@ -35,9 +49,10 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
 
 });
 
-
 const register = asyncHandler( async (req, res) => {
     const {username, email, password, fullname} = req.body;
+    
+    // console.log(username, email, password, fullname);
     
     if([username, email, password, fullname].some((field) => !(field?.trim()))){
         throw new ApiError(400,"all fields are required");
@@ -46,14 +61,14 @@ const register = asyncHandler( async (req, res) => {
 
     //this is vulnerable to enumeration attacks 
     let user = await User.findOne({username : username});
-
+    // console.log(user);
     if(user){
         throw new ApiError(409,"Username Already Exists");
     }
 
     user = await User.findOne({email : email});
     
-    if(email){
+    if(user){
         throw new ApiError(409,"User with email already Exists");
     }
 
@@ -84,7 +99,7 @@ const login = asyncHandler( async (req, res) => {
         throw new ApiError(400,"all fields are required");
     }
     
-    const user = await User.findOne({$or:[{username : username}, {$and:[{email:email}, {isActive:true}]}]});
+    const user = await User.findOne({$or:[{username : usernameOrEmail}, {$and:[{email:usernameOrEmail}, {isActive:true}]}]});
     if(!user || ! (await user?.passwordCheck(password))){
         throw new ApiError(401,"invalid credentials");
     }
@@ -94,7 +109,7 @@ const login = asyncHandler( async (req, res) => {
     
     const {accessToken, refreshToken} = await generateTokens(user?._id);
 
-    const data = User.findById(user?._id).select("-password");
+    const data = await User.findById(user?._id).select("-password");
 
     res
     .status(200)
@@ -107,7 +122,8 @@ const logout = asyncHandler( async (req, res) => {
     const user = await User.findByIdAndUpdate({_id:req.user?._id},
         {
             $unset: {refreshToken:""}
-        }
+        },
+        {new:true}
     );
 
     if(!user || user.refreshToken){
@@ -119,6 +135,8 @@ const logout = asyncHandler( async (req, res) => {
     .clearCookie("refreshToken",cookieOptions)
     .clearCookie("accessToken",cookieOptions)
     .json(new ApiResponse(200,{},"Looged out succesfully"));
+    console.log("User Logged out");
+    
 });
 
 const updateFullname = asyncHandler( async (req, res) => {
@@ -177,10 +195,17 @@ const updateEmail = asyncHandler( async (req, res) => {
 //eh, may be avtar acts as secondary form of recognition for users 
 
 const getCurrentUser = asyncHandler( async(req, res) => {
+    
+    const user = await User.findById(req.user?._id).select("-password -refreshToken");
+    console.log(user);
+    if(!user){
+        throw new ApiError(404,"User Not Found");
+    }
+    
     res
     .status(200)
-    .json(new ApiResponse(200, await User.findById(req.user?._id)
-    .select('-password -refreshToken'), "Current User Data Fetched"));
+    .json(new ApiResponse(200, user, "Current User Data Fetched"));
+    console.log("Current User Fetched");
 });
 
 export {

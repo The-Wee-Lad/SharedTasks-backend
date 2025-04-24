@@ -10,12 +10,14 @@ import {
     updateEmail,
     getCurrentUser
 } from "../controllers/user.controller.js";
+import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.route('/register').post(register);
 router.route('/login').post(login);
+router.use(verifyJwt)
 router.route('/refresh').get(refreshAccessToken);   
-router.route('/logout').get(logout);
+router.route('/logout').post(logout);
 router.route('/update-fullname').patch(updateFullname);
 router.route('/update-email').patch(updateEmail);
 router.route('/change-password').patch(changePassword);
