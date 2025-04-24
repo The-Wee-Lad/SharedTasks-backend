@@ -1,10 +1,12 @@
 import dotenv from "dotenv";
+dotenv.config({
+    path: "./.env",
+    credentials : true,
+});
+console.log(process.env.MONGO_URI);
+
 import { connectDb } from "./db/index.js";
 import { app } from "./app.js"
-
-dotenv.config({
-    path: "./.env"
-})
 
 const port = process.env.PORT||3000
 

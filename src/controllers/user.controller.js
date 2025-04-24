@@ -73,7 +73,8 @@ const register = asyncHandler( async (req, res) => {
     //TODO: Implement a email verification
 
     res.status(200).json(new ApiResponse(200,newUser,"User created succesfully"));
-
+    console.log("User Registered");
+    
 });
 
 const login = asyncHandler( async (req, res) => {
@@ -182,71 +183,6 @@ const getCurrentUser = asyncHandler( async(req, res) => {
     .select('-password -refreshToken'), "Current User Data Fetched"));
 });
 
-const getAllTodoLists = asyncHandler( async (req, res) => {
-    const todos = await User.aggregate([
-        {
-            $match:{
-                _id: new mongoose.Types.ObjectId(req.user?._id)
-            }
-        },
-        {
-            $lookup:{
-                from: "todolists",
-                localField:"todoLists",
-                foreignField:"_id",
-                as: "todoLists",
-                pipeline:[
-                    {
-                        $lookup:{
-                            from: "todolists",
-                            localField:"tasks",
-                            foreignField:"_id",
-                            as: "tasks",
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            $project:{
-                todolists : 1
-            }
-        }
-    ]);
-    res.status(200).json(new ApiResponse(200,todos,"Sent all todoLists"));
-});
-
-const toggleArchive = asyncHandler( async (req, res) => {
-    
-    const {todoListId} = req.params;
-    if(!mongoose.isValidObjectId(todoListId)){
-        throw new ApiError(400,"Invalid Id");
-    }
-    const A = await User.findOneAndUpdate({
-        _id: req.user?._id,
-        todolists:todoListId,
-    },
-    {
-        $pull: {todolists:new mongoose.Types.ObjectId(todoListId)},
-        $push: {archives:new mongoose.Types.ObjectId(todoListId)}
-    }).select("-password -refreshToken");
-    const B = await User.findOneAndUpdate({
-        _id: req.user?._id,
-        archives:todoListId,
-    },
-    {
-        $pull: {archives:new mongoose.Types.ObjectId(todoListId)},
-        $push: {todolists:new mongoose.Types.ObjectId(todoListId)}
-    }).select("-password -refreshToken");
-
-    if(!A && !B){
-        throw new ApiError(400, "No Such Todolist Found");
-    }
-
-    res.status(200).json(new ApiResponse(200, A||B, "Successfull"));
-
-});
-
 export {
     refreshAccessToken,
     register,
@@ -257,6 +193,4 @@ export {
     forgotPassword,
     updateEmail,
     getCurrentUser,
-    getAllTodoLists,
-    toggleArchive,
 }

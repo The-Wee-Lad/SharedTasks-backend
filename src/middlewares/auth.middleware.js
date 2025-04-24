@@ -7,7 +7,7 @@ export const verifyJwt = asyncHandler( async (req, res, next) => {
     const recievedAccessToken = req.cookies.accessToken || req.headers?.authorization?.replace('Bearer ','').trim();
     
     if(!recievedAccessToken){
-        throw new ApiError(401, "No Token Found");
+        throw new ApiError(401, "No Token Found [IN COOKIES");
     }
 
     let decodedAccessToken;
@@ -20,7 +20,7 @@ export const verifyJwt = asyncHandler( async (req, res, next) => {
     const user = await User.findById(decodedAccessToken?._id);
     
     if(!user){
-        throw new ApiError(401, "Invalid Token");
+        throw new ApiError(401, "Invalid Token [NO USER FOUND]");
     }
     req.user = user;
     next();
