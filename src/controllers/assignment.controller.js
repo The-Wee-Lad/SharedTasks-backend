@@ -7,8 +7,58 @@ import { Tasklist } from "../models/Tasklist.js";
 import { User } from "../models/User.js";
 
 
+const assignTask = asyncHandler(async (req, res) => {
+    const { taskId, target } = req.body;
+    const userId = req.user._id;
+    const task = await Task.findById(taskId);
+    if (!task) {
+        throw new ApiError(404, "Task not found");
+    }
+    const taskList = await Tasklist.findById(task.tasklistId);
+    if (!taskList) {
+        throw new ApiError(404, "Tasklist not found");
+    }
+    const userCollab = await Collaborator.findOne({ userId, tasklistId: taskList._id });
+    if (!userCollab || userCollab.role !== "admin") {
+        throw new ApiError(403, "You are not authorized to assign this task");
+    }
+    const collaborator = await Collaborator.findOne({ userId: target, tasklistId: taskList._id });
+    if (!collaborator) {
+        throw new ApiError(404, "Collaborator not found");
+    }
+    const assignedTask = await Task.findByIdAndUpdate(
+        taskId,
+        { assignedTo: target },
+        { new: true }
+    );
+    res.status(200).json(new ApiResponse(200, assignedTask, "Task assigned successfully"));
+    console.log("Task assigned successfully", assignedTask);
+})
 
+const unassignTask = asyncHandler(async (req, res) => {
+    const { taskId, target } = req.body;
+    const userId = req.user._id;
+    const task = await Task.findById(taskId);
+    if (!task) {
+        throw new ApiError(404, "Task not found");
+    }
+    const taskList = await Tasklist.findById(task.tasklistId);
+    if (!taskList) {
+        throw new ApiError(404, "Tasklist not found");
+    }
+    const userCollab = await Collaborator.findOne({ userId, tasklistId: taskList._id });
+    if (!userCollab || userCollab.role !== "admin") {
+        throw new ApiError(403, "You are not authorized to assign this task");
+    }
+    const collaborator = await Collaborator.findOne({ userId: target, tasklistId: taskList._id });
+    if (!collaborator) {
+        throw new ApiError(404, "Collaborator not found");
+    }
+    const unassignedTask = await Task.findByIdAndDelete(taskId);
 
+    res.status(200).json(new ApiResponse(200, unassignedTask, "Task assigned successfully"));
+    console.log("Task assigned successfully", unassignedTask);
+})
 export {
     assignTask,
     unassignTask,

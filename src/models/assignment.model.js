@@ -6,7 +6,7 @@ const assignmentSchema = new Schema({
         ref: "tasks",
         required: true
     },
-    userId:{
+    assignedTo:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
         required: true
