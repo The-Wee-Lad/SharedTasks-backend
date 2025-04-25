@@ -91,7 +91,7 @@ const rejectInvitation = asyncHandler(async (req, res) => {
 
 const deleteInvitation = asyncHandler(async (req, res) => {
     const userId = req.user._id;
-    const { invitationId } = req.params;
+    const { invitationId } = req.body;
     const invitation = await Invitation.findById(invitationId);
     if (!invitation) {
         throw new ApiError(404, "Invitation not found");

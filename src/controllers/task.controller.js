@@ -14,6 +14,7 @@ const createTask = asyncHandler(async (req, res) => {
     const { title, description, status, priority, dueDate } = req.body;
     const collaborater = Collaborator.findOne({ taskListId: taskListId, userId: req.user._id });
     const taskList = await TodoList.findById(taskListId);
+    
     if (!taskList) {
         throw new ApiError(404, "Task List not found");
     }

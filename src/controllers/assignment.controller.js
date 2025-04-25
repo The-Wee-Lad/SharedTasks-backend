@@ -59,6 +59,26 @@ const unassignTask = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, unassignedTask, "Task assigned successfully"));
     console.log("Task assigned successfully", unassignedTask);
 })
+
+const getAllAssignments = asyncHandler(async (req, res) => {
+    const { taskId } = req.body;
+    const userId = req.user._id;
+    const task = await Task.findById(taskId);
+    if (!task) {
+        throw new ApiError(404, "Task not found");
+    }
+    const collaborator = await Collaborator.findOne({ userId, tasklistId: task.tasklistId });
+    if (!collaborator) {
+        throw new ApiError(403, "You are not authorized to view this task");
+    }
+    const assignments = await Task.find({ taskId });
+    if (!assignments) {
+        throw new ApiError(404, "Assignments not found");
+    }
+    res.status(200).json(new ApiResponse(200, assignments, "Assignments retrieved successfully"));
+    console.log("Assignments retrieved successfully", assignments);
+});
+
 export {
     assignTask,
     unassignTask,

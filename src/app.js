@@ -21,11 +21,12 @@ import { taskRouter } from './routes/task.route.js'
 import { tasklistRouter } from "./routes/tasklist.route.js";
 import { userRouter } from "./routes/user.route.js"
 import { healthcheckController } from "./controllers/healthcheck.controller.js";
+import { managementRouter } from "./routes/management.route.js";
 app.use('/api/v1/user',userRouter);
 app.use('/api/v1/task',taskRouter);
 app.use('/api/v1/todolist',tasklistRouter);
 app.use('/api/v1/healthcheck',healthcheckController);
-
+app.use('/api/v1/management',managementRouter);
 app.use((req, res) => {
     res.status(404).json({status:404,message:"Route not found"});
 });
