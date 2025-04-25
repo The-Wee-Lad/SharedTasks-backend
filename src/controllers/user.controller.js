@@ -202,9 +202,9 @@ const updateEmail = asyncHandler( async (req, res) => {
 //eh, may be avtar acts as secondary form of recognition for users 
 
 const getCurrentUser = asyncHandler( async(req, res) => {
-    
+    console.log("fetching user data");
     const user = await User.findById(req.user?._id).select("-password -refreshToken");
-    console.log(user);
+    // console.log(user);
     if(!user){
         throw new ApiError(404,"User Not Found");
     }

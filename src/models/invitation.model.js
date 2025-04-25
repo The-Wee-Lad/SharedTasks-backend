@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const requestSchema = new Schema({
+const invitationSchema = new Schema({
     invitee: {
         type: Schema.Types.ObjectId,
         ref: "users",
@@ -18,7 +18,7 @@ const requestSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ["pending", "accepted", "rejected", "rescinded"],
+        enum: ["pending", "accepted", "rejected"],
         default: "pending",
     },
     role:{
@@ -39,4 +39,4 @@ const requestSchema = new Schema({
     },
 }, { timestamps: true });
 
-export const Request = model("requests", requestSchema);
+export const Invitation = model("invitations", invitationSchema);
