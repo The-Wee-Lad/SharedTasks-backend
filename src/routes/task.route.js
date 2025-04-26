@@ -5,7 +5,7 @@ import {
     updateTask,
     getTask,
 } from "../controllers/task.controller.js";
-import { verifyJwt } from "../middlewares/verifyJwt.js";
+import { verifyJwt } from "../middlewares/auth.middleware.js";
 import { tasklistAuthMiddleware } from "../middlewares/tasklistAuth.middleware.js";
 
 const router = Router();

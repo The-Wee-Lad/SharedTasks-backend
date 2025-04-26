@@ -1,11 +1,9 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { Collaborator } from "../models/Collaborator.js";
-import { Task } from "../models/Task.js";
-import { Tasklist } from "../models/Tasklist.js";
-import { User } from "../models/User.js";
-import { Invitation } from "../models/Invitation.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { Collaborator } from "../models/collaborators.model.js";
+import { TaskList } from "../models/tasklist.model.js";
+import { Invitation } from "../models/invitation.model.js";
 
 
 const createInvitation = asyncHandler(async (req, res) => {
@@ -14,7 +12,7 @@ const createInvitation = asyncHandler(async (req, res) => {
     if(!taskListId || !invitee || !role) {
         throw new ApiError(400, "taskListId, invitee and role are required");
     }
-    const taskList = await Tasklist.findById(taskListId);
+    const taskList = await TaskList.findById(taskListId);
     if (!taskList) {
         throw new ApiError(404, "Tasklist not found");
     }
@@ -52,7 +50,7 @@ const acceptInvitation = asyncHandler(async (req, res) => {
     if(invitation.status !== "pending") {
         throw new ApiError(409, "Invitation already accepted or rejected");
     }
-    const taskList = await Tasklist.findById(invitation.taskListId);
+    const taskList = await TaskList.findById(invitation.taskListId);
     if (!taskList) {
         throw new ApiError(404, "Tasklist not found");
     }

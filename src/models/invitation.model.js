@@ -7,7 +7,7 @@ const invitationSchema = new Schema({
         required: true
     },
     inviter: {
-        tyPe: Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "users",
         required: true
     },

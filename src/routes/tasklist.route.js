@@ -6,7 +6,6 @@ import {
     deleteTasklistById,
     updateTasklistById,
 } from "../controllers/tasklist.controller.js";
-import { verifyJwt } from "../middlewares/auth.middleware.js";
 import { tasklistAuthMiddleware } from "../middlewares/tasklistAuth.middleware.js";
 
 const router = Router();

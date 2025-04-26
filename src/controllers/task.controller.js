@@ -1,7 +1,7 @@
-import { Task } from "../models/task.model";
+import { Task } from "../models/task.model.js";
 import { User } from "../models/user.model.js";
-import { TodoList } from "../models/todolist.model.js";
-import { asyncHandler } from "../utils/asyncHandler";
+import { TaskList } from "../models/tasklist.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Collaborator } from "../models/collaborators.model.js";

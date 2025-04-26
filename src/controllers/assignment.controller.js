@@ -1,10 +1,10 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { Collaborator } from "../models/Collaborator.js";
-import { Task } from "../models/Task.js";
-import { Tasklist } from "../models/Tasklist.js";
-import { User } from "../models/User.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { Collaborator } from "../models/collaborators.model.js";
+import { Task } from "../models/task.model.js";
+import { TaskList } from "../models/tasklist.model.js";
+
 
 
 const assignTask = asyncHandler(async (req, res) => {
@@ -14,7 +14,7 @@ const assignTask = asyncHandler(async (req, res) => {
     if (!task) {
         throw new ApiError(404, "Task not found");
     }
-    const taskList = await Tasklist.findById(task.tasklistId);
+    const taskList = await TaskList.findById(task.tasklistId);
     if (!taskList) {
         throw new ApiError(404, "Tasklist not found");
     }
@@ -42,7 +42,7 @@ const unassignTask = asyncHandler(async (req, res) => {
     if (!task) {
         throw new ApiError(404, "Task not found");
     }
-    const taskList = await Tasklist.findById(task.tasklistId);
+    const taskList = await TaskList.findById(task.tasklistId);
     if (!taskList) {
         throw new ApiError(404, "Tasklist not found");
     }

@@ -1,10 +1,8 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { Collaborator } from "../models/Collaborator.js";
-import { Task } from "../models/Task.js";
-import { Tasklist } from "../models/Tasklist.js";
-import { User } from "../models/User.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { Collaborator } from "../models/collaborators.model.js";
+
 
 const updateCollaborator = asyncHandler(async (req, res) => {
     const { role, taskListId, target } = req.body;
