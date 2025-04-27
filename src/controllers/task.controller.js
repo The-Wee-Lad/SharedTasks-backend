@@ -13,7 +13,8 @@ const createTask = asyncHandler(async (req, res) => {
     const { taskListId } = req.params;
     const { title, description, status, priority, dueDate } = req.body;
     const collaborater = Collaborator.findOne({ taskListId: taskListId, userId: req.user._id });
-    const taskList = await TodoList.findById(taskListId);
+    const taskList = await TaskList.findById(taskListId);
+    console.log("User :", req.user);
     
     if (!taskList) {
         throw new ApiError(404, "Task List not found");
@@ -29,6 +30,7 @@ const createTask = asyncHandler(async (req, res) => {
         priority: priority || "low",
         dueDate: dueDate ? new Date(dueDate) : null,
         taskListId: taskListId,
+        createdBy: req?.user?._id,
     });
     res.status(201).json(new ApiResponse(201, task, "Task Created"));
     console.log("Task created : ", task);
@@ -36,22 +38,22 @@ const createTask = asyncHandler(async (req, res) => {
 
 const deleteTask = asyncHandler(async (req, res) => {
     const { taskId } = req.params;
-    const task = await Task.findBy(taskId);
+    const task = await Task.findById(taskId);
     if (!task) {
         throw new ApiError(404, "Task not found");
     }
-    const taskList = await TodoList.findById(task?.taskListId);
+    const taskList = await TaskList.findById(task?.taskListId);
     if (!taskList) {
         throw new ApiError(404, "Task List not found");
     }
-    const collaborater = Collaborator.findOne({ taskListId: taskList._id, userId: req.user._id });
+    const collaborater = await Collaborator.findOne({ taskListId: taskList._id, userId: req?.user?._id });
     if ((!collaborater || collaborater.role == "view")
-        && (taskList.createdBy.toString() != req.user._id.toString())) {
+        && (taskList.createdBy.toString() != req?.user?._id.toString())) {
         throw new ApiError(403, "Not Authorized to delete task in this task list");
     }
     await Assignment.deleteMany({ taskId: taskId });
     await Task.findByIdAndDelete(taskId);
-    res.status(200).json(new ApiResponse(200, null, "Task Deleted"));
+    res.status(200).json(new ApiResponse(200, task, "Task Deleted"));
     console.log("Task deleted : ", task);
 });
 
@@ -61,11 +63,11 @@ const getTask = asyncHandler(async (req, res) => {
     if (!task) {
         throw new ApiError(404, "Task not found");
     }
-    const taskList = await TodoList.findById(task?.taskListId);
+    const taskList = await TaskList.findById(task?.taskListId);
     if (!taskList) {
         throw new ApiError(404, "Task List not found");
     }
-    const collaborater = Collaborator.findOne(
+    const collaborater = await Collaborator.findOne(
         { taskListId: taskList._id, userId: req.user._id }
     );
     if ((!collaborater)
@@ -83,7 +85,7 @@ const updateTask = asyncHandler(async (req, res) => {
     if (!task) {
         throw new ApiError(404, "Task not found");
     }
-    const taskList = await TodoList.findById(task?.taskListId);
+    const taskList = await TaskList.findById(task?.taskListId);
     if (!taskList) {
         throw new ApiError(404, "Task List not found");
     }

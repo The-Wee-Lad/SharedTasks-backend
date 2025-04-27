@@ -45,11 +45,14 @@ const getTasklistById = asyncHandler(async (req, res) => {
     }
     const collaborator = await Collaborator.findOne({
         taskListId: tasklistId,
-        userId: req.user._id,
+        userId: req?.user?._id,
     });
 
-    if (tasklist?.public?.isPublic === false && (!collaborator) && tasklist?.createdBy.toString() !== req.user._id.toString()) {
-        throw new ApiError(403, {}, "You are not authorized to access this tasklist");
+    console.log("Collaborator : ", collaborator);
+    
+
+    if (tasklist?.public?.isPublic === false && (!collaborator) && tasklist?.createdBy.toString() !== req?.user?._id.toString()) {
+        throw new ApiError(403, "You are not authorized to access this tasklist");
     }
 
     const entireTasklist = await TaskList.aggregate([
@@ -62,7 +65,7 @@ const getTasklistById = asyncHandler(async (req, res) => {
             $lookup: {
                 from: "tasks",
                 localField: "_id",
-                foreignField: "tasklistId",
+                foreignField: "taskListId",
                 as: "tasks",
             },
         },
@@ -95,7 +98,7 @@ const getTasklistById = asyncHandler(async (req, res) => {
     ]);
 
     res.status(200).json(new ApiResponse(200, entireTasklist, "Tasklist retrieved successfully"));
-    console.log("TaskList Retrieved : ", tasklist);
+    console.log("TaskList Retrieved : ", entireTasklist);
 });
 
 const getAllMyTasklist = asyncHandler(async (req, res) => {

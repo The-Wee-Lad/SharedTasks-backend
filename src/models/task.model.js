@@ -26,7 +26,12 @@ const taskSchema = new Schema({
     dueDate:{
         type: Date,
         default: null,
-    }
+    },
+    createdBy:{
+        type: Schema.Types.ObjectId,
+        ref: "users",
+        required:true,
+    },
 },{timestamps: true});
 
 export const Task = model("tasks",taskSchema);
