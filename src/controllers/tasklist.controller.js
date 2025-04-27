@@ -5,6 +5,7 @@ import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
+import { Task } from "../models/task.model.js";
 
 const createTasklist = asyncHandler(async (req, res) => {
     const { title, description, dueDate, isPublic, role } = req.body;
@@ -16,15 +17,23 @@ const createTasklist = asyncHandler(async (req, res) => {
         dueDate: dueDate ? new Date(dueDate) : null,
         public: {
             isPublic: isPublic || false,
-            role: role || "view",
+            role: isPublic ? role : null,
         },
     });
-    const collaborator = await Collaborator.create({
-        userId: userId,
-        tasklistId: tasklist._id,
-        role: "admin",
-    });
-    res.status(201).json(new ApiResponse(res, 201, tasklist, "Tasklist created successfully"));
+    console.log("TaskList Created : ", tasklist._id);
+
+    try {
+        const collaborator = await Collaborator.create({
+            userId: userId,
+            taskListId: tasklist._id,
+            role: "admin",
+        });
+    } catch (error) {
+        console.error("Error creating collaborator: ", error);
+        await tasklist.remove();
+        throw new ApiError(500, {}, "Failed to create collaborator for tasklist.");
+    }
+    res.status(201).json(new ApiResponse(201, tasklist, "Tasklist created successfully"));
     console.log("TaskList Created : ", tasklist);
 });
 
@@ -35,7 +44,7 @@ const getTasklistById = asyncHandler(async (req, res) => {
         throw new ApiError(404, {}, "Tasklist not found");
     }
     const collaborator = await Collaborator.findOne({
-        tasklistId: tasklistId,
+        taskListId: tasklistId,
         userId: req.user._id,
     });
 
@@ -46,7 +55,7 @@ const getTasklistById = asyncHandler(async (req, res) => {
     const entireTasklist = await TaskList.aggregate([
         {
             $match: {
-                _id: mongoose.Types.ObjectId(tasklistId),
+                _id: new mongoose.Types.ObjectId(tasklistId),
             },
         },
         {
@@ -85,7 +94,7 @@ const getTasklistById = asyncHandler(async (req, res) => {
         }
     ]);
 
-    res.status(200).json(new ApiResponse(res, 200, entireTasklist, "Tasklist retrieved successfully"));
+    res.status(200).json(new ApiResponse(200, entireTasklist, "Tasklist retrieved successfully"));
     console.log("TaskList Retrieved : ", tasklist);
 });
 
@@ -96,15 +105,15 @@ const getAllMyTasklist = asyncHandler(async (req, res) => {
             $lookup: {
                 from: "collaborators",
                 localField: "_id",
-                foreignField: "tasklistId",
+                foreignField: "taskListId",
                 as: "collaborators",
             }
         },
         {
             $match: {
                 $or: [
-                    { createdBy: mongoose.Types.ObjectId(req.user._id) },
-                    { "collaborators.userId": mongoose.Types.ObjectId(req.user._id) }
+                    { createdBy: new mongoose.Types.ObjectId(req?.user?._id) },
+                    { "collaborators.userId": new mongoose.Types.ObjectId(req?.user?._id) }
                 ]
             }
         },
@@ -116,7 +125,7 @@ const getAllMyTasklist = asyncHandler(async (req, res) => {
                             $filter: {
                                 input: "$collaborators",
                                 as: "collaborator",
-                                cond: { $eq: ["$$collaborator.userId", mongoose.Types.ObjectId(req.user._id)] }
+                                cond: { $eq: ["$$collaborator.userId", new mongoose.Types.ObjectId(req?.user?._id)] }
                             }
                         }, 0
                     ]
@@ -135,55 +144,61 @@ const getAllMyTasklist = asyncHandler(async (req, res) => {
         res.status(200).json(new ApiResponse(200, [], "No Tasklists found"));
     }
 
-    res.status(200).json(new ApiResponse(res, 200, allMyTasklist, "All Tasklists retrieved successfully"));
+    res.status(200).json(new ApiResponse(200, allMyTasklist, "All Tasklists retrieved successfully"));
     console.log("All TaskList Retrieved : ", allMyTasklist);
 });
 
 const deleteTasklistById = asyncHandler(async (req, res) => {
     const tasklistId = req.params.tasklistId;
     const collaborator = await Collaborator.findOne({
-        tasklistId: tasklistId,
-        userId: req.user._id,
+        taskListId: tasklistId,
+        userId: req?.user?._id,
     });
     const tasklist = await TaskList.findById(tasklistId);
     if (!tasklist) {
         throw new ApiError(404, {}, "Tasklist not found");
     }
-    if ((!collaborator || collaborator?.role != "admin") && tasklist?.createdBy.toString() !== req.user._id.toString()) {
+    if ((!collaborator || collaborator?.role != "admin") && tasklist?.createdBy.toString() !== req?.user?._id.toString()) {
         throw new ApiError(403, {}, "You are not authorized to delete this tasklist");
     }
-    await Collaborator.deleteMany({ tasklistId: tasklistId });
-    await Task.deleteMany({ tasklistId: tasklistId });
-    await tasklist.remove();
-    res.status(200).json(new ApiResponse(res, 200, null, "Tasklist deleted successfully"));
+    await Collaborator.deleteMany({ taskListId: tasklistId });
+    await Task.deleteMany({ taskListId: tasklistId });
+    await TaskList.findByIdAndDelete(tasklistId);
+    res.status(200).json(new ApiResponse(200, tasklist, "Tasklist deleted successfully"));
     console.log("TaskList Deleted : ", tasklist);
 });
 
 const updateTasklistById = asyncHandler(async (req, res) => {
     const tasklistId = req.params.tasklistId;
+    console.log(req?.user?._id  );
+    
     const collaborator = await Collaborator.findOne({
-        tasklistId: tasklistId,
-        userId: req.user._id,
+        taskListId: tasklistId,
+        userId: req?.user?._id,
     });
     const tasklist = await TaskList.findById(tasklistId);
     if (!tasklist) {
         throw new ApiError(404, {}, "Tasklist not found");
     }
 
-    if ((tasklist?.public?.isPublic === false) && (tasklist?.public?.role == "view")
-        && tasklist?.createdBy.toString() !== req.user._id.toString()
+    console.log("Collaborator : ", collaborator); 
+    
+
+    if ((tasklist?.public?.isPublic === false) && (tasklist?.public?.role == "view" ||  tasklist?.public?.role == "")
+        && tasklist?.createdBy.toString() !== req?.user?._id.toString()
         && collaborator?.role == "view") {
         throw new ApiError(403, {}, "You are not authorized to access this tasklist");
     }
-    const { title, description, dueDate, isPublic, role, isCompleted } = req.body;
+    const { title, description, dueDate, isArchived, isPublic, role, isCompleted } = req.body;
     tasklist.title = title || tasklist.title;
     tasklist.description = description || tasklist.description;
     tasklist.dueDate = dueDate ? new Date(dueDate) : tasklist.dueDate;
     tasklist.public.isPublic = isPublic || tasklist.public.isPublic;
     tasklist.public.role = role || tasklist.public.role;
     tasklist.isCompleted = isCompleted || tasklist.isCompleted;
+    tasklist.isArchived = isArchived || tasklist.isArchived;
     await tasklist.save();
-    res.status(200).json(new ApiResponse(res, 200, tasklist, "Tasklist updated successfully"));
+    res.status(200).json(new ApiResponse(200, tasklist, "Tasklist updated successfully"));
     console.log("TaskList Updated : ", tasklist);
 });
 

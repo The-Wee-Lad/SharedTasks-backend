@@ -25,7 +25,7 @@ const taskListSchema = new Schema({
         },
         role:{
             type: String,
-            enum: ["edit", "view", "admin"],
+            enum: ["edit", "view", "admin", ''],
             default: "view"
         }
     },
