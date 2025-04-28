@@ -68,12 +68,7 @@ SharedTasks is a robust, scalable API designed to simplify task and project mana
    ```
 
 3. **Set up Environment Variables**
-   Create a `.env` file in the root directory and configure the following:
-   ```env
-   MONGODB_URI=your_mongodb_connection_url
-   JWT_SECRET=your_jwt_secret
-   PORT=3000
-   ```
+   Create a `.env` file in the root directory
 
 4. **Run the Application Locally**
    To start the API server:
@@ -97,28 +92,28 @@ SharedTasks is a robust, scalable API designed to simplify task and project mana
 
 ## API Endpoints
 ### User Authentication
-- > POST /api/v1/user/register
-- > POST /api/v1/user/login
-- > POST /api/v1/user/logout
-- > GET /api/v1/user/current
-- > PATCH /api/v1/user/change-password
-- > PATCH /api/v1/user/update-email
-- > PATCH /api/v1/user/update-fullname
-- > POST /api/v1/user/refresh
-- > GET /api/v1/user/confirm/:confirmationToken
-- > POST /api/v1/user/resend-confirmation
+- > POST `/api/v1/user/register`
+- > POST `/api/v1/user/login`
+- > POST `/api/v1/user/logout`
+- > GET `/api/v1/user/current`
+- > PATCH `/api/v1/user/change-password`
+- > PATCH `/api/v1/user/update-email`
+- > PATCH `/api/v1/user/update-fullname`
+- > POST `/api/v1/user/refresh`
+- > GET `/api/v1/user/confirm/:confirmationToken`
+- > POST `/api/v1/user/resend-confirmation`
 
 ### TaskList
-- > POST /api/v1/tasklist/create
-- > GET /api/v1/tasklist/get/:tasklistId
-- > GET /api/v1/tasklist/get
-- > PATCH /api/v1/tasklist/update/:tasklistId
-- > DELETE /api/v1/tasklist/delete/:tasklistId
+- > POST `/api/v1/tasklist/create`
+- > GET `/api/v1/tasklist/get/:tasklistId`
+- > GET `/api/v1/tasklist/get`
+- > PATCH `/api/v1/tasklist/update/:tasklistId`
+- > DELETE `/api/v1/tasklist/delete/:tasklistId`
 
 ### Task
-- > POST /api/v1/task/create/:taskListId
-- > GET /api/v1/task/get/:taskId
-- > PATCH /api/v1/task/update/:taskId
+- > POST `/api/v1/task/create/:taskListId`
+- > GET `/api/v1/task/get/:taskId`
+- > PATCH `/api/v1/task/update/:taskId`
 - > DELETE `/api/v1/task/delete/:taskId
 `
 ### System
