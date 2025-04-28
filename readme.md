@@ -119,14 +119,22 @@ SharedTasks is a robust, scalable API designed to simplify task and project mana
 - > POST /api/v1/task/create/:taskListId
 - > GET /api/v1/task/get/:taskId
 - > PATCH /api/v1/task/update/:taskId
-- > DELETE /api/v1/task/delete/:taskId
-
+- > DELETE `/api/v1/task/delete/:taskId
+`
 ### System
-- > GET /api/v1/healthcheck
+- > GET `/api/v1/healthcheck`
 
-### Invitation, Collaborator, Assignments & Notifications !!! 
+### Invitation
+- > POST `/api/v1/task/management/invite/create`
+- > POST `/api/v1/task/management/invite/accept`
+- > POST `/api/v1/task/management/invite/reject`
+- > DELETE `/api/v1/task/management/invite/delete/:invitationId`
+- > GET `/api/v1/task/management/invite/get-all`
+- > GET `/api/v1/task/management/invite/get`
+
+### Collaborator, Assignments & Notifications !!! 
  
-#### Under Devolopment.
+ - #### Under Devolopment.
 
 ``` 20+ api endpoints, for all import postman collection from the folders! ```
 
