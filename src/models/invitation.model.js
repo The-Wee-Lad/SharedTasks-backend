@@ -23,7 +23,7 @@ const invitationSchema = new Schema({
     },
     role:{
         type: String,
-        enum: ["editor", "viewonly", "admin"],
+        enum: ["editor", "view", "admin"],
         default: "viewonly",
         required: true
     },
