@@ -3,7 +3,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { cookieOptions, welcomeEmail, confirmationEmail } from "../constant.js";
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { ApiError } from '../utils/ApiError.js';
-import jwt, { decode } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { emailSender, messageCreater } from '../utils/email.util.js';
 
 const sendConfirmationEmail = async (userId) => {
@@ -152,7 +152,7 @@ const login = asyncHandler(async (req, res) => {
         throw new ApiError(400, "all fields are required");
     }
 
-    const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { $and: [{ email: usernameOrEmail }, { isActive: true }] }] });
+    const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { email: usernameOrEmail } ] });
     if (!user || !(await user?.passwordCheck(password))) {
         throw new ApiError(401, "invalid credentials");
     }
