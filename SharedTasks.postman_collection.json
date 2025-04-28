@@ -1,0 +1,757 @@
+{
+	"info": {
+		"_postman_id": "db0a0254-6590-48d2-b7ce-872d57b36f70",
+		"name": "SharedTasks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40788084"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "User Register",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "adityanarayan",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "a6925220@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "adityanarayan",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "Aditya Narayan",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/user/register",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user login",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usernameOrEmail",
+									"value": "a6925220@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "adityanarayan",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/user/login",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user logout",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/user/logout",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Current User",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/user/current",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"current"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Passwrord",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "test0",
+									"type": "text"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "test0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/user/change-password",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"change-password"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Email",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "password",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "newEmail",
+									"value": "test0email",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/user/update-email",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"update-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update fullname",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "Aditya",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/user/update-fullname",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"update-fullname"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Access Token",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/user/refresh",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"refresh"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConfirmEmail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/user/confirm/:confirmationToken",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"confirm",
+								":confirmationToken"
+							],
+							"variable": [
+								{
+									"key": "confirmationToken",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend Confirmation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/user/resend-confirmation",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"resend-confirmation"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TaskList",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Delete Test",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Delete Test",
+									"type": "text"
+								},
+								{
+									"key": "createdBy",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "dueDate",
+									"value": "2025-02-23",
+									"type": "text"
+								},
+								{
+									"key": "isPublic",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/tasklist/create",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tasklist",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasklist by Id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/tasklist/get/:tasklistId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tasklist",
+								"get",
+								":tasklistId"
+							],
+							"variable": [
+								{
+									"key": "tasklistId",
+									"value": "680da3d4b733f38dd527b361"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All My Tasklists",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/tasklist/get",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tasklist",
+								"get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Tasklist",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Test #3",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "dueDate",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "isCompleted",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "isArchived",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "isPublic",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/tasklist/update/:tasklistId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tasklist",
+								"update",
+								":tasklistId"
+							],
+							"variable": [
+								{
+									"key": "tasklistId",
+									"value": "680dad35f0ab36dea11cf4a8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tasklist",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/tasklist/delete/:tasklistId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tasklist",
+								"delete",
+								":tasklistId"
+							],
+							"variable": [
+								{
+									"key": "tasklistId",
+									"value": "680db10d900e87af78a2fcf4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task",
+			"item": [
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "First Task",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "This is Genesis",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "done",
+									"type": "text"
+								},
+								{
+									"key": "priority",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "dueDate",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/task/update/:taskId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"task",
+								"update",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "680dc003259749059be3823b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/task/get/:taskId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"task",
+								"get",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "680dc030259749059be3824f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Task 5",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Task 5",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "priority",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "dueDate",
+									"value": "2024-04-23",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/task/create/:taskListId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"task",
+								"create",
+								":taskListId"
+							],
+							"variable": [
+								{
+									"key": "taskListId",
+									"value": "680dad19f0ab36dea11cf499"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/v1/task/delete/:taskId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"task",
+								"delete",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "680dc030259749059be3824f"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invitation",
+			"item": []
+		},
+		{
+			"name": "Collaborator",
+			"item": []
+		},
+		{
+			"name": "Assignment",
+			"item": []
+		},
+		{
+			"name": "HealthCheck",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/api/v1/healthcheck",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"healthcheck"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
