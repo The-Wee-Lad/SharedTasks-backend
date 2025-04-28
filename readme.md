@@ -128,8 +128,6 @@ SharedTasks is a robust, scalable API designed to simplify task and project mana
 - > GET `/api/v1/task/management/invite/get`
 
 ### Collaborator, Assignments & Notifications !!! 
- 
- - #### Under Devolopment.
 
 ``` 20+ api endpoints, for all import postman collection from the folders! ```
 
