@@ -22,22 +22,7 @@ const userSchema = new Schema({
         required: [true, "Password is neccessary"]
     },
     refreshToken: String,
-    // todoLists: {
-    //     type: [
-    //         {
-    //             type: Schema.Types.ObjectId,
-    //             ref: "todos",
-    //         }
-    //     ]
-    // },
-    // archives: {
-    //     type: [
-    //         {
-    //             type: Schema.Types.ObjectId,
-    //             ref: "todos",
-    //         }
-    //     ]
-    // },
+    confirmationToken: String,
     avatar: String,
     coverImage: String,
     isActive:{
@@ -81,6 +66,15 @@ userSchema.methods.generateRefreshToken = function () {
     );
 };
 
-
+userSchema.methods.generateConfirmationToken = function () {
+    return jwt.sign({
+        _id: this._id,
+    },
+        process.env.CONFIRMATION_KEY,
+        {
+            expiresIn: process.env.CONFIRMATION_EXPIRY,
+        }
+    );
+};
 
 export const User = mongoose.model("users", userSchema);

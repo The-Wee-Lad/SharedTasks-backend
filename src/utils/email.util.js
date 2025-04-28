@@ -90,7 +90,30 @@ let emailSenderWrapper = async (to, subject, text, html, attachments) => {
     return result.status
 }
 
+let emailSenderWrapper2 = async (message) => {
+    spinner.start('Sending Email ... ');
+    let result = await emailSender(message);
+    if (result.status) {
+        spinner.succeed('Mail Sent! here is the result: ');
+        console.log("Message ID: ", result.messageId);
+        console.log("Response: ", result.response);
+        console.log("Accepted: ", result.accepted);
+        console.log("Rejected: ", result.rejected);
+        console.log("Envelope: ", result.envelope);
+    }
+    else {
+        spinner.fail('Failed to send email!');
+        console.log("Error: ", result.error);
+        console.log("Stack: ", result.stack);
+        console.log("Code: ", result.code);
+        console.log("Response: ", result.response);
+    }
+    console.log("Done!");
+    transporter.close();
+    return result.status
+}
+
 
 //emailSenderWrapper("tvoyluchshiydrug1@gmail.com", "SharedTask Email", "TEXT", "<h1>This is An Email from Shared-Task</h1>");
 
-export { emailSenderWrapper as emailSender, messageCreater };
+export { emailSender, messageCreater, emailSenderWrapper2, emailSenderWrapper };
