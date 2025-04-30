@@ -2,7 +2,8 @@
 
 SharedTasks is a robust, scalable API designed to simplify task and project management for teams. With this API, teams can efficiently create, assign, and manage tasks while enforcing customizable role-based permissions, enabling seamless collaboration, and enhancing productivity across projects.
 
- > 20+ api endpoints, for all import postman collection from [./SharedTasks.postman_collection.json](./SharedTasks.postman_collection.json) 
+ > 20+ api endpoints, for all import postman collection from [./SharedTasks.postman_collection.json](./SharedTasks.postman_collection.json)
+ > Implemented Email Verification System too
 
 ---
 
@@ -43,15 +44,19 @@ SharedTasks is a robust, scalable API designed to simplify task and project mana
 - **Stay Updated**: Receive real-time notifications on task assignments, status changes, and other important events.
 - **Activity Logs**: Detailed logs provide insights into task updates, assignments, and permissions changes.
 
+- **Email authentication is used using Nodemailer**
 ---
 
 ## Getting Started
 
-### Prerequisites
+### Technologies and Libraries
 
 - Node.js (v14 or higher)
+- ExpressJs
+- Mongoose
 - MongoDB (local or cloud instance)
 - Git (for version control)
+- NodeMailer (for email verfication), JWT (for auth) 
 
 ### Setup
 
